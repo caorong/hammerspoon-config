@@ -17,7 +17,7 @@ local weaEmoji = {
 }
 
 function updateMenubar()
-	 menubar:setTooltip("Weather Info")
+	menubar:setTooltip("Weather Info")
     menubar:setMenu(menuData)
 end
 
@@ -33,12 +33,17 @@ function getWeather()
       for k, v in pairs(rawjson.data) do
          if k == 1 then
             menubar:setTitle(weaEmoji[v.wea_img])
-            titlestr = string.format("%s %s %s 🌡️%s 💧%s 💨%s 🌬 %s %s", city,weaEmoji[v.wea_img],v.day, v.tem, v.humidity, v.air, v.win_speed, v.wea)
+            titlestr = string.format("%s %s %s 🌡️%s [%s - %s] 💧%s 💨%s 🌬%s %s", city,weaEmoji[v.wea_img],v.day, v.tem, v.tem2, v.tem1, v.humidity, v.air, v.win_speed, v.wea)
             item = { title = titlestr }
             table.insert(menuData, item)
             table.insert(menuData, {title = '-'})
+            for kk, vv in pairs(v.hours) do
+                hourtitlestr = string.format("%s %s 🌡️%s", vv.day, vv.wea, vv.tem)
+                item = { title = hourtitlestr }
+                table.insert(menuData, item)
+            end
+            table.insert(menuData, {title = '-'})
          else
-            -- titlestr = string.format("%s %s %s %s", v.day, v.wea, v.tem, v.win_speed)
             titlestr = string.format("%s %s %s 🌡️%s 🌬%s %s", city, weaEmoji[v.wea_img],v.day, v.tem, v.win_speed, v.wea)
             item = { title = titlestr }
             table.insert(menuData, item)
@@ -50,5 +55,4 @@ end
 
 menubar:setTitle('⌛')
 getWeather()
-updateMenubar()
 hs.timer.doEvery(3600, getWeather)
